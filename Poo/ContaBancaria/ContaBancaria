@@ -1,0 +1,136 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.contabancaria;
+
+/**
+ *
+ * @author eduro
+ */
+public class ContaBancaria {
+    private String cliente;
+    private int num_conta;
+    protected float saldo;
+    public ContaBancaria (String cliente, int num_Conta, float saldo){
+        this.cliente = cliente;
+        this.num_conta = num_conta;
+        this.saldo = saldo;
+    }
+    public String getCliente(){
+        return cliente;
+    }
+    public int getNum_conta(){
+        return num_conta;
+    }
+    public float getSaldo(){
+        return saldo;
+    }
+    public void sacar(float valor){
+        if(saldo - valor >=0){
+            saldo -=valor;
+            System.out.println("Saque realizado com sucesso."+ saldo);
+        }else {
+            System.out.println("Saldo Insuficiente para realizar o saque.");
+        }
+    }
+    public void depositar(float valor) {
+        if (valor > 0) {
+            saldo += valor;
+            System.out.println("Depósito realizado com sucesso. Novo saldo: R$ " + saldo);
+        } else {
+            System.out.println("Valor inválido para depósito.");
+        }
+    }
+    
+}
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.contabancaria;
+
+/**
+ *
+ * @author eduro
+ */
+public class ContaEspecial extends ContaBancaria {
+    private float limite;
+
+    public ContaEspecial(String cliente, int num_conta, float saldo, float limite) {
+        super(cliente, num_conta, saldo);
+        this.limite = limite;
+    }
+
+    @Override
+    public void sacar(float valor) {
+        if (valor > 0 && (saldo - valor) >= -limite) {
+            saldo -= valor;
+            System.out.println("Saque realizado com sucesso. Novo saldo: R$ " + saldo);
+        } else {
+            System.out.println("Saldo insuficiente para realizar o saque.");
+        }
+    }
+}
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.contabancaria;
+
+import java.util.Calendar;
+
+/**
+ *
+ * @author eduro
+ */
+public class ContaPoupanca extends ContaBancaria {
+    private int diaRendimento;
+    
+    public ContaPoupanca(String cliente, int num_conta, float saldo, int diaRendimento) {
+        super(cliente, num_conta, saldo);
+        this.diaRendimento = diaRendimento;
+    }
+    
+    public void calcularNovoSaldo(float taxaRendimento) {
+        int diaAtualalizado = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        if (diaAtualalizado == diaRendimento) {
+            float rendimento = saldo * taxaRendimento / 100;
+            saldo += rendimento;
+            System.out.println("Rendimento aplicado. Novo saldo: R$ " + saldo);
+        } else {
+            System.out.println("Ainda não é dia de rendimento.");
+        }
+    }
+    
+}
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.contabancaria;
+
+/**
+ *
+ * @author eduro
+ */
+public class Contas {
+
+    public static void main(String[] args) {
+        ContaBancaria conta1 = new ContaBancaria("João Contini", 3536, 2035.0f);
+        ContaPoupanca conta2 = new ContaPoupanca("eduardo", 1369, 500.0f, 14);
+        ContaEspecial conta3 = new ContaEspecial("Carlos", 3003, 80000.0f, 250000.0f);
+
+        conta1.sacar(500.0f);
+        conta1.depositar(1000.0f);
+
+        conta2.calcularNovoSaldo(0.5f);
+
+        conta3.sacar(2500.0f);
+        conta3.sacar(1000.0f);
+        conta3.depositar(500.0f);
+    }
+}
